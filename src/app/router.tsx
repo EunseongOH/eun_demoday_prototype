@@ -78,6 +78,8 @@ import {
   ClassroomLockerPlacementPage,
 } from '@/features/classroom/LockerPages'
 import { LockerStickerPickPage } from '@/features/classroom/LockerStickerPage'
+import { LockerCharmPickPage } from '@/features/classroom/LockerCharmPickPage'
+import { CharmPickPage } from '@/features/supporter/CharmPickPage'
 import { LockerDecoratePage } from '@/features/classroom/LockerDecoratePage'
 import { PrototypeIndexPage } from '@/prototype/screens/PrototypeIndexPage'
 import {
@@ -133,6 +135,10 @@ export const router = createBrowserRouter([
       {
         path: '/prototype/support/jisu/compose',
         element: <UnifiedComposerPage />,
+      },
+      {
+        path: '/prototype/support/jisu/charm',
+        element: <CharmPickPage />,
       },
       {
         path: '/prototype/support/jisu/sticker',
@@ -263,6 +269,10 @@ export const router = createBrowserRouter([
       {
         path: '/prototype/classroom/:classroomId/locker/:lockerId/decorate',
         element: <LockerDecoratePage />,
+      },
+      {
+        path: '/prototype/classroom/:classroomId/locker/:lockerId/charm',
+        element: <LockerCharmPickPage />,
       },
       {
         path: '/prototype/classroom/:classroomId/locker/:lockerId/sticker',

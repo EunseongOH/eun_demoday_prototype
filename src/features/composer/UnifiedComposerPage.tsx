@@ -78,9 +78,16 @@ export function UnifiedComposerPage() {
   const classroomMode = Boolean(classroomId && classroomLocker)
   const recipientName =
     classroomLocker?.studentName ?? currentDesk.displayName
+  const objectChoice = usePrototypeStore(
+    (state) => state.supporterObjectChoice,
+  )
+  // Writing a charm's cheer comes after picking the charm, so back goes there
+  const charmFirst = objectChoice === 'charm'
   const backPath = classroomMode
-    ? `/prototype/classroom/${classroomId}/locker/${lockerId}`
-    : '/prototype/support/jisu'
+    ? `/prototype/classroom/${classroomId}/locker/${lockerId}${charmFirst ? '/charm' : ''}`
+    : charmFirst
+      ? '/prototype/support/jisu/charm'
+      : '/prototype/support/jisu'
   const placementPath = classroomMode
     ? `/prototype/classroom/${classroomId}/locker/${lockerId}/placement`
     : '/prototype/support/jisu/placement'
@@ -458,10 +465,14 @@ export function UnifiedComposerPage() {
         contentClassName="composer-shell"
         appBar={
           <AppBar
-            title="응원 쓰기"
+            title={charmFirst ? '부적에 담을 응원' : '응원 쓰기'}
             leading={
               <IconButton
-                label={`${recipientName}님의 책상으로 돌아가기`}
+                label={
+                  charmFirst
+                    ? '부적 고르기로 돌아가기'
+                    : `${recipientName}님의 책상으로 돌아가기`
+                }
                 icon={<ArrowLeft size={21} aria-hidden />}
                 onClick={() => navigate(backPath)}
               />

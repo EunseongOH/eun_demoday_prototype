@@ -184,10 +184,13 @@ export function SupportDeskPage() {
               onChoose={(choice: SupporterObjectChoice) => {
                 setSupporterObjectChoice(choice)
                 setChoiceOpen(false)
+                // A charm is picked first, then the cheer is written into it
                 navigate(
                   choice === 'sticker'
                     ? '/prototype/support/jisu/sticker'
-                    : '/prototype/support/jisu/compose',
+                    : choice === 'charm'
+                      ? '/prototype/support/jisu/charm'
+                      : '/prototype/support/jisu/compose',
                 )
               }}
             />
