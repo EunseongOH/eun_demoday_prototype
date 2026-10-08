@@ -21,6 +21,7 @@ import {
   TextField,
   useFeedback,
 } from '@/design-system'
+import { getCapsuleMinDate } from '@/features/csat/csatSchedule'
 import {
   DEFAULT_CAPSULE_UNLOCK_AT,
   formatReadMode,
@@ -152,6 +153,7 @@ export function DeskSettingsPage() {
                   <span>날짜</span>
                   <input
                     type="date"
+                min={getCapsuleMinDate()}
                     value={capsule.date}
                     onChange={(event) =>
                       setDeskReadMode({
@@ -608,6 +610,7 @@ export function CreatorManagementPage() {
                 <span>날짜</span>
                 <input
                   type="date"
+                min={getCapsuleMinDate()}
                   value={splitDateTime(desk.readMode.unlockAt).date}
                   onChange={(event) => {
                     const current = splitDateTime(
