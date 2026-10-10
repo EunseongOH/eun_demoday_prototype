@@ -3,6 +3,12 @@
   padding-bottom: 42px;
 }
 
+.owner-desk__app-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
 .owner-desk {
   display: grid;
   gap: 20px;

@@ -15,6 +15,7 @@ import {
   charmDesigns,
   getCharmDesign,
 } from './charmDesigns'
+import { formatPoints } from '@/features/points/points'
 import './supporterFlow.css'
 
 /**
@@ -135,7 +136,7 @@ export function CharmPickPage() {
           >
             {([
               ['flat', '평면 스티커', '무료'],
-              ['acrylic', '아크릴 3D', `${ACRYLIC_CHARM_PRICE}원`],
+              ['acrylic', '아크릴 3D', formatPoints(ACRYLIC_CHARM_PRICE)],
             ] as const).map(([material, label, price]) => (
               <button
                 type="button"

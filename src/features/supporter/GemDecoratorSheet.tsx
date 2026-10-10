@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { BottomSheet, Button } from '@/design-system'
 import { DeskObjectVisual } from '@/features/desk/DeskObjectLayer'
 import type { CharmMaterial, DeskGem, DeskObjectType } from '@/types'
+import { formatPoints } from '@/features/points/points'
 import {
   GEM_PRICE,
   LOOSE_GEM_SIZE,
@@ -167,7 +168,7 @@ export function GemDecoratorSheet({
       open={open}
       onClose={onClose}
       title="보석 스티커로 꾸미기"
-      description={`보석 하나에 ${GEM_PRICE}원이에요. 끌어서 옮기고, 눌러서 고를 수 있어요.`}
+      description={`보석 하나에 ${formatPoints(GEM_PRICE)}예요. 끌어서 옮기고, 눌러서 고를 수 있어요.`}
     >
       <div className="gem-decorator">
         <div className="gem-decorator__stage">
@@ -302,7 +303,7 @@ export function GemDecoratorSheet({
 
         <Button variant="brand" fullWidth onClick={onClose}>
           {gems.length > 0
-            ? `보석 ${gems.length}개 · ${gems.length * GEM_PRICE}원으로 꾸미기`
+            ? `보석 ${gems.length}개 · ${formatPoints(gems.length * GEM_PRICE)}로 꾸미기`
             : '꾸미기 닫기'}
         </Button>
       </div>

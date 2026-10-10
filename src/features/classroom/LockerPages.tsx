@@ -18,7 +18,6 @@ import {
 } from 'react-router-dom'
 import {
   AppBar,
-  BottomSheet,
   Button,
   IconButton,
   useFeedback,
@@ -32,6 +31,9 @@ import {
   type DeskSticker,
 } from '@/features/supporter/deskStickers'
 import { ObjectChoiceSheet } from '@/features/supporter/ObjectChoiceSheet'
+import { formatPoints } from '@/features/points/points'
+import { PointPaySheet } from '@/features/points/PointPaySheet'
+import { FirstCheerReward } from '@/features/points/FirstCheerReward'
 import { lockerStickers } from './lockerStickers'
 import {
   UNIVERSITY_CHARM_PRICE,
@@ -251,7 +253,7 @@ export function ClassroomLockerPage() {
           types={['letter', 'charm', 'sticker']}
           charmPreviewAssetId={universityCharmId('yonsei', 'jersey')}
           descriptions={{
-            charm: `대학 굿즈 아크릴 키링에 응원을 담아요. 하나에 ${UNIVERSITY_CHARM_PRICE}원이에요.`,
+            charm: `대학 굿즈 아크릴 키링에 응원을 담아요. 하나에 ${formatPoints(UNIVERSITY_CHARM_PRICE)}예요.`,
           }}
           onClose={() => setChoiceOpen(false)}
           onChoose={(choice) => {
@@ -499,7 +501,7 @@ export function ClassroomLockerPlacementPage() {
           {stickerMode
             ? '이대로 붙이고 가기'
             : charmMode
-              ? `${UNIVERSITY_CHARM_PRICE}원 결제하고 놓기`
+              ? `${formatPoints(UNIVERSITY_CHARM_PRICE)} 쓰고 놓기`
               : '이대로 놓고 가기'}
         </Button>
       }
@@ -524,7 +526,7 @@ export function ClassroomLockerPlacementPage() {
             </span>
             <span className="charm-summary__text">
               <strong>{charmLabel}</strong>
-              <span>아크릴 · {UNIVERSITY_CHARM_PRICE}원</span>
+              <span>아크릴 · {formatPoints(UNIVERSITY_CHARM_PRICE)}</span>
             </span>
             <button
               type="button"
@@ -658,13 +660,13 @@ export function ClassroomLockerPlacementPage() {
           {charmMode && (
             <div className="placement-preview__summary-row">
               <span>가격</span>
-              <strong>{UNIVERSITY_CHARM_PRICE}원 · 아크릴</strong>
+              <strong>{formatPoints(UNIVERSITY_CHARM_PRICE)} · 아크릴</strong>
             </div>
           )}
           {stickerMode && sticker.price ? (
             <div className="placement-preview__summary-row">
-              <span>결제</span>
-              <strong>{sticker.price}원 결제 완료</strong>
+              <span>찰떡</span>
+              <strong>{formatPoints(sticker.price)} 사용 완료</strong>
             </div>
           ) : null}
           <div className="placement-preview__summary-row">
@@ -685,36 +687,23 @@ export function ClassroomLockerPlacementPage() {
         </section>
       </main>
 
-      <BottomSheet
+      <PointPaySheet
         open={paymentOpen}
         onClose={() => setPaymentOpen(false)}
-        title="이대로 결제하고 놓을까요?"
+        title="찰떡을 쓰고 놓을까요?"
         description="대학 굿즈 부적은 아크릴 키링으로만 만들어요."
-      >
-        <div className="charm-payment">
-          <div className="charm-payment__row">
-            <span>{charmLabel} · 아크릴</span>
-            <strong>{UNIVERSITY_CHARM_PRICE}원</strong>
-          </div>
-          <div className="charm-payment__row charm-payment__row--total">
-            <span>합계</span>
-            <strong>{UNIVERSITY_CHARM_PRICE}원</strong>
-          </div>
-          <p className="charm-payment__note">
-            프로토타입이라 실제 결제는 되지 않아요.
-          </p>
-          <Button
-            variant="brand"
-            fullWidth
-            onClick={() => {
-              setPaymentOpen(false)
-              finish(true)
-            }}
-          >
-            {UNIVERSITY_CHARM_PRICE}원 결제하기
-          </Button>
-        </div>
-      </BottomSheet>
+        charges={[
+          {
+            key: 'charm',
+            label: `${charmLabel} · 아크릴`,
+            points: UNIVERSITY_CHARM_PRICE,
+          },
+        ]}
+        onPaid={() => {
+          setPaymentOpen(false)
+          finish(true)
+        }}
+      />
     </AppShell>
   )
 }
@@ -755,6 +744,7 @@ export function ClassroomLockerCompletePage() {
         </Button>
       }
     >
+      <FirstCheerReward />
       <main className="classroom-locker-complete">
         <span className="classroom-form__complete-mark" aria-hidden>
           ✓

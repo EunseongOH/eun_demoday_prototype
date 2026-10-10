@@ -3,11 +3,12 @@ import { ArrowLeft, Ban } from 'lucide-react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import {
   AppBar,
-  BottomSheet,
   Button,
   IconButton,
   useFeedback,
 } from '@/design-system'
+import { formatPoints } from '@/features/points/points'
+import { PointPaySheet } from '@/features/points/PointPaySheet'
 import { AppShell } from '@/layout/AppShell'
 import { usePrototypeStore } from '@/store/prototypeStore'
 import {
@@ -63,7 +64,7 @@ export function LockerDecoratePage() {
       ...draft,
       bulbOwned: saved.bulbOwned || Boolean(draft.bulb),
     })
-    showToast(total > 0 ? `${total}원 결제하고 적용했어요.` : '사물함을 꾸몄어요.')
+    showToast(total > 0 ? `${formatPoints(total)}를 쓰고 적용했어요.` : '사물함을 꾸몄어요.')
     navigate(lockerPath)
   }
 
@@ -139,7 +140,7 @@ export function LockerDecoratePage() {
           disabled={!changed}
           onClick={() => (total > 0 ? setPaymentOpen(true) : apply())}
         >
-          {total > 0 ? `${total}원 결제하고 적용하기` : '적용하기'}
+          {total > 0 ? `${formatPoints(total)} 쓰고 적용하기` : '적용하기'}
         </Button>
       }
     >
@@ -164,7 +165,7 @@ export function LockerDecoratePage() {
             <span>
               {saved.bulbOwned
                 ? '구매 완료 · 모양은 자유롭게 바꿔요'
-                : `${LOCKER_DECOR_PRICE}원 · 한 번 사면 모양은 자유롭게`}
+                : `${formatPoints(LOCKER_DECOR_PRICE)} · 한 번 사면 모양은 자유롭게`}
             </span>
           </header>
           <div className="locker-decorate__bulbs">
@@ -208,38 +209,21 @@ export function LockerDecoratePage() {
         {paintRow('바깥 페인트', 'outside', false)}
       </main>
 
-      <BottomSheet
+      <PointPaySheet
         open={paymentOpen}
         onClose={() => setPaymentOpen(false)}
-        title="이대로 결제하고 적용할까요?"
+        title="찰떡을 쓰고 적용할까요?"
         description="꾸민 사물함은 반 친구들에게도 그대로 보여요."
-      >
-        <div className="charm-payment">
-          {charges.map((charge) => (
-            <div key={charge.key} className="charm-payment__row">
-              <span>{charge.label}</span>
-              <strong>{charge.price}원</strong>
-            </div>
-          ))}
-          <div className="charm-payment__row charm-payment__row--total">
-            <span>합계</span>
-            <strong>{total}원</strong>
-          </div>
-          <p className="charm-payment__note">
-            프로토타입이라 실제 결제는 되지 않아요.
-          </p>
-          <Button
-            variant="brand"
-            fullWidth
-            onClick={() => {
-              setPaymentOpen(false)
-              apply()
-            }}
-          >
-            {total}원 결제하기
-          </Button>
-        </div>
-      </BottomSheet>
+        charges={charges.map((charge) => ({
+          key: charge.key,
+          label: charge.label,
+          points: charge.price,
+        }))}
+        onPaid={() => {
+          setPaymentOpen(false)
+          apply()
+        }}
+      />
     </AppShell>
   )
 }

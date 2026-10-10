@@ -43,8 +43,8 @@ export const charmUniversities: University[] = ['yonsei', 'korea', 'snu'].map(
   (id) => getUniversity(id),
 )
 
-/** One acrylic university charm, prototype price in won. */
-export const UNIVERSITY_CHARM_PRICE = 150
+/** One acrylic university charm, in 찰떡. */
+export const UNIVERSITY_CHARM_PRICE = 30
 
 export type UniversityCharmShape =
   | 'jersey'

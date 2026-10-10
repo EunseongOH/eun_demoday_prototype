@@ -1,7 +1,7 @@
 import type { DeskSticker } from '@/features/supporter/deskStickers'
 
-/** One college pennant, prototype price in won. */
-export const PENNANT_PRICE = 150
+/** One college pennant, in 찰떡. */
+export const PENNANT_PRICE = 30
 
 export type LockerStickerGroup = 'star' | 'bow' | 'garland' | 'pennant'
 

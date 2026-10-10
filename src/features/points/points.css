@@ -1,0 +1,353 @@
+/* Rewarded ad placeholder */
+.ad-player {
+  position: relative;
+  overflow: hidden;
+  min-height: 132px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: repeating-linear-gradient(45deg, #2f2c28 0 12px, #36322d 12px 24px);
+  color: rgba(255, 255, 255, .86);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ad-player__badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #ffc21a;
+  color: #1e1b18;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.ad-player__progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  background: #ffc21a;
+  transition: width 1s linear;
+}
+
+.ad-player__note {
+  margin: 0;
+  color: var(--color-content-tertiary);
+  font-size: 12px;
+}
+
+.point-icon {
+  flex: none;
+}
+
+/* Pay sheet */
+.point-pay {
+  display: grid;
+  gap: 12px;
+}
+
+.point-pay__bill {
+  display: grid;
+  gap: 8px;
+}
+
+.point-pay__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--color-surface-subtle);
+  font-size: 14px;
+}
+
+.point-pay__row--total {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--color-border-default);
+}
+
+.point-pay__balance {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 4px;
+  font-size: 14px;
+}
+
+.point-pay__after {
+  margin-left: auto;
+  color: var(--color-content-secondary);
+}
+
+.point-pay__balance--short .point-pay__after {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+
+.point-pay__earned {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--color-success-soft);
+  color: var(--color-success);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.point-pay__earn {
+  display: grid;
+  gap: 8px;
+}
+
+.point-pay__hint {
+  margin: 0;
+  color: var(--color-content-tertiary);
+  font-size: 12px;
+  text-align: center;
+}
+
+.point-pay__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.point-pay__item img {
+  width: 56px;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(30, 20, 10, .2);
+}
+
+.point-pay__item--contain img {
+  object-fit: contain;
+  box-shadow: none;
+  background: #f4efe6;
+  padding: 6px;
+}
+
+/* Balance chip */
+.point-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 3px 10px 3px 7px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 999px;
+  background: var(--color-surface-raised);
+  color: var(--color-content-primary);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.point-chip__dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--color-surface-base);
+  border-radius: 50%;
+  background: var(--color-brand);
+}
+
+/* Wallet */
+.point-wallet {
+  display: grid;
+  gap: 20px;
+}
+
+.point-wallet__balance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 28px;
+}
+
+.point-wallet__section {
+  display: grid;
+  gap: 10px;
+}
+
+.point-wallet__section header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.point-wallet__section header span {
+  color: var(--color-content-secondary);
+  font-size: 12px;
+  text-align: right;
+}
+
+.point-wallet__stamps {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.point-wallet__stamp {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 1.5px dashed var(--color-border-strong);
+  border-radius: 50%;
+  color: var(--color-content-tertiary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.point-wallet__stamp--bonus {
+  border-color: var(--color-butter);
+  background: var(--color-butter-soft);
+}
+
+.point-wallet__stamp--done {
+  border: none;
+  background: #f46c65;
+  color: #fff8ea;
+}
+
+.point-wallet__extra {
+  margin: 0;
+  color: var(--color-content-tertiary);
+  font-size: 12px;
+  text-align: center;
+}
+
+.point-wallet__guest {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--color-butter-soft);
+}
+
+.point-wallet__guest div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font-size: 13px;
+}
+
+.point-wallet__guest span {
+  color: var(--color-content-secondary);
+  font-size: 12px;
+}
+
+.point-wallet__guest .ds-button {
+  flex: none;
+}
+
+.point-wallet__note {
+  margin: 0;
+  color: var(--color-content-tertiary);
+  font-size: 12px;
+}
+
+.point-wallet__guide-toggle {
+  justify-self: center;
+  padding: 4px 8px;
+  border: 0;
+  background: none;
+  color: var(--color-content-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* 찰떡 guide */
+.point-guide {
+  display: grid;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--color-surface-subtle);
+}
+
+.point-guide h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.point-guide dl {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.point-guide dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.point-guide dt {
+  color: var(--color-content-secondary);
+}
+
+.point-guide dd {
+  margin: 0;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.point-guide__rules {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--color-content-secondary);
+  font-size: 12px;
+}
+
+/* First cheer intro */
+.point-intro {
+  display: grid;
+  gap: 14px;
+}
+
+.point-intro__gift {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 0;
+  border-radius: 14px;
+  background: var(--color-butter-soft);
+  font-size: 26px;
+}
+
+.point-intro p {
+  margin: 0;
+  color: var(--color-content-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.point-intro__actions {
+  display: grid;
+  gap: 8px;
+}

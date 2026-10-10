@@ -1,7 +1,7 @@
 import type { DeskGem } from '@/types'
 
-/** Prototype price per gem sticker, in KRW. */
-export const GEM_PRICE = 5
+/** Price per gem sticker, in 찰떡 (see features/points). */
+export const GEM_PRICE = 1
 
 /** Loose gems a supporter can stick one by one (a shape set comes on top). */
 export const MAX_LOOSE_GEMS = 12

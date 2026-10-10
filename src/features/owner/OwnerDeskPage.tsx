@@ -7,6 +7,7 @@ import {
   IconButton,
   useFeedback,
 } from '@/design-system'
+import { PointBalanceChip } from '@/features/points/PointWallet'
 import { isDeskFull } from '@/features/supporter/supporterFlow'
 import { DeskBasketSheet } from './DeskBasketSheet'
 import { ASK_FOR_CHEERS_LABEL, shareMyDeskLink } from './shareMyDesk'
@@ -228,11 +229,14 @@ export function OwnerDeskPage() {
             />
           }
           trailing={
-            <IconButton
-              label="응원 책상 설정"
-              icon={<Settings size={20} aria-hidden />}
-              onClick={() => navigate('/prototype/my/settings')}
-            />
+            <div className="owner-desk__app-actions">
+              <PointBalanceChip />
+              <IconButton
+                label="응원 책상 설정"
+                icon={<Settings size={20} aria-hidden />}
+                onClick={() => navigate('/prototype/my/settings')}
+              />
+            </div>
           }
         />
       }

@@ -11,8 +11,8 @@ export type CharmDesign = {
 
 const CHARM_ASSET_PATH = '/assets/charms'
 
-/** Prototype price for the paid acrylic version, in KRW. */
-export const ACRYLIC_CHARM_PRICE = 50
+/** Price of the paid acrylic version, in 찰떡. */
+export const ACRYLIC_CHARM_PRICE = 10
 
 export const charmDesigns: CharmDesign[] = [
   { id: 'charm-yeot', name: '엿', phrase: '철썩 합격', ink: '#C4502F' },

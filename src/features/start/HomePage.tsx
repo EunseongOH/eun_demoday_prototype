@@ -2,6 +2,7 @@ import { ChevronRight, Plus, UserRound, UsersRound } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useFeedback } from '@/design-system'
 import { getCsatDdayLabel } from '@/features/csat/csatSchedule'
+import { PointBalanceChip } from '@/features/points/PointWallet'
 import { AppShell } from '@/layout/AppShell'
 import { usePrototypeStore } from '@/store/prototypeStore'
 import './StartPage.css'
@@ -26,7 +27,10 @@ export function HomePage() {
     <AppShell surface="base" contentClassName="home-page-shell">
       <main className="home-page">
         <header className="home-page__header">
-          <span className="start-page__dday">{getCsatDdayLabel()}</span>
+          <div className="home-page__topline">
+            <span className="start-page__dday">{getCsatDdayLabel()}</span>
+            <PointBalanceChip />
+          </div>
           <h1>
             {currentUser.displayName}님,
             <br />

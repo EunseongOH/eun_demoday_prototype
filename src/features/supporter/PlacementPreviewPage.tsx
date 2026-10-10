@@ -3,7 +3,6 @@ import { ArrowLeft, Eye, Gem, LockKeyhole, Move } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import {
   AppBar,
-  BottomSheet,
   Button,
   IconButton,
 } from '@/design-system'
@@ -39,6 +38,11 @@ import {
   resolveCharmPhrase,
 } from './charmDesigns'
 import { GEM_PRICE, countGemCost } from './gems'
+import { formatPoints } from '@/features/points/points'
+import {
+  PointPaySheet,
+  type PointCharge,
+} from '@/features/points/PointPaySheet'
 import { GemDecoratorSheet } from './GemDecoratorSheet'
 import './supporterFlow.css'
 
@@ -98,14 +102,21 @@ export function PlacementPreviewPage() {
   // Gem positions are relative to the object's box, so a new shape starts clean.
   useEffect(() => setGems([]), [objectType])
 
-  // Prototype-only purchase: no payment details are collected.
+  // Acrylic and gems are paid in 찰떡 right before the cheer is placed.
   const acrylicCost =
     charmMode && charmMaterial === 'acrylic' ? ACRYLIC_CHARM_PRICE : 0
   const gemCost = countGemCost(gems)
   const totalCost = acrylicCost + gemCost
-  const [paidAmount, setPaidAmount] = useState(0)
   const [paymentOpen, setPaymentOpen] = useState(false)
-  const needsPayment = !stickerMode && totalCost > paidAmount
+  const needsPayment = !stickerMode && totalCost > 0
+  const charges: PointCharge[] = [
+    ...(acrylicCost > 0
+      ? [{ key: 'acrylic', label: `${finalCharmPhrase} 부적 · 아크릴 3D`, points: acrylicCost }]
+      : []),
+    ...(gemCost > 0
+      ? [{ key: 'gems', label: `보석 스티커 ${gems.length}개`, points: gemCost }]
+      : []),
+  ]
   const firstPage = getFirstCardPage(draft)
   const cardPreviewColor =
     getComposerBackground(firstPage.backgroundAssetId).tone
@@ -193,9 +204,9 @@ export function PlacementPreviewPage() {
     window.addEventListener('pointerup', onUp, { once: true })
   }
 
-  const placeMessage = () => {
+  const placeMessage = (paid = false) => {
     if (placing || !valid) return
-    if (needsPayment) {
+    if (needsPayment && !paid) {
       setPaymentOpen(true)
       return
     }
@@ -253,12 +264,12 @@ export function PlacementPreviewPage() {
           fullWidth
           loading={placing}
           disabled={!valid}
-          onClick={placeMessage}
+          onClick={() => placeMessage()}
         >
           {stickerMode
             ? '여기에 붙이기'
             : needsPayment
-              ? `${totalCost}원 결제하고 놓기`
+              ? `${formatPoints(totalCost)} 쓰고 놓기`
               : '이대로 놓고 가기'}
         </Button>
       }
@@ -315,8 +326,8 @@ export function PlacementPreviewPage() {
             <span className="gem-entry__label">보석 스티커로 꾸미기</span>
             <span className="gem-entry__meta">
               {gems.length > 0
-                ? `보석 ${gems.length}개 · ${gemCost}원`
-                : `하나에 ${GEM_PRICE}원`}
+                ? `보석 ${gems.length}개 · ${formatPoints(gemCost)}`
+                : `하나에 ${formatPoints(GEM_PRICE)}`}
             </span>
           </button>
         )}
@@ -437,46 +448,17 @@ export function PlacementPreviewPage() {
         </section>
       </main>
 
-      <BottomSheet
+      <PointPaySheet
         open={paymentOpen}
         onClose={() => setPaymentOpen(false)}
-        title="이대로 결제하고 놓을까요?"
+        title="찰떡을 쓰고 놓을까요?"
         description="반짝이는 꾸미기는 책상 위에서 더 눈에 띄어요."
-      >
-        <div className="charm-payment">
-          {acrylicCost > 0 && (
-            <div className="charm-payment__row">
-              <span>{finalCharmPhrase} 부적 · 아크릴 3D</span>
-              <strong>{acrylicCost}원</strong>
-            </div>
-          )}
-          {gemCost > 0 && (
-            <div className="charm-payment__row">
-              <span>
-                보석 스티커 {gems.length}개 × {GEM_PRICE}원
-              </span>
-              <strong>{gemCost}원</strong>
-            </div>
-          )}
-          <div className="charm-payment__row charm-payment__row--total">
-            <span>합계</span>
-            <strong>{totalCost}원</strong>
-          </div>
-          <p className="charm-payment__note">
-            프로토타입이라 실제 결제는 되지 않아요.
-          </p>
-          <Button
-            variant="brand"
-            fullWidth
-            onClick={() => {
-              setPaidAmount(totalCost)
-              setPaymentOpen(false)
-            }}
-          >
-            {totalCost}원 결제하기
-          </Button>
-        </div>
-      </BottomSheet>
+        charges={charges}
+        onPaid={() => {
+          setPaymentOpen(false)
+          placeMessage(true)
+        }}
+      />
 
       {!stickerMode && (
         <GemDecoratorSheet

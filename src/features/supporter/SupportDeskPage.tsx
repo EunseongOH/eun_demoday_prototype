@@ -8,6 +8,7 @@ import {
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppBar, Button, IconButton, useFeedback } from '@/design-system'
+import { PointBalanceChip } from '@/features/points/PointWallet'
 import { DeskObjectLayer } from '@/features/desk/DeskObjectLayer'
 import { DeskScene } from '@/features/desk/DeskScene'
 import { AppShell } from '@/layout/AppShell'
@@ -143,6 +144,7 @@ export function SupportDeskPage() {
           }
           trailing={
             <div className="support-desk__app-actions">
+              <PointBalanceChip showCheckIn={false} />
               {supporterIdentityName && (
                 <IconButton
                   label={

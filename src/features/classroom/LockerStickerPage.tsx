@@ -4,10 +4,11 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import {
   AppBar,
   AssetTile,
-  BottomSheet,
   Button,
   IconButton,
 } from '@/design-system'
+import { formatPoints } from '@/features/points/points'
+import { PointPaySheet } from '@/features/points/PointPaySheet'
 import { AppShell } from '@/layout/AppShell'
 import { usePrototypeStore } from '@/store/prototypeStore'
 import {
@@ -64,7 +65,7 @@ export function LockerStickerPickPage() {
           disabled={!selected}
           onClick={() => (price > 0 ? setPaymentOpen(true) : goPlace())}
         >
-          {price > 0 ? `${price}원 결제하고 붙이러 가기` : '사물함에 붙이러 가기'}
+          {price > 0 ? `${formatPoints(price)} 쓰고 붙이러 가기` : '사물함에 붙이러 가기'}
         </Button>
       }
     >
@@ -119,38 +120,21 @@ export function LockerStickerPickPage() {
         ))}
       </main>
 
-      <BottomSheet
+      <PointPaySheet
         open={paymentOpen}
         onClose={() => setPaymentOpen(false)}
-        title="이대로 결제하고 붙일까요?"
+        title="찰떡을 쓰고 붙일까요?"
         description="대학 깃발은 사물함 안에 걸려서 친구의 목표를 응원해요."
-      >
-        {selected && (
-          <div className="charm-payment">
-            <div className="charm-payment__row">
-              <span>대학 깃발 · {selected.name}</span>
-              <strong>{price}원</strong>
-            </div>
-            <div className="charm-payment__row charm-payment__row--total">
-              <span>합계</span>
-              <strong>{price}원</strong>
-            </div>
-            <p className="charm-payment__note">
-              프로토타입이라 실제 결제는 되지 않아요.
-            </p>
-            <Button
-              variant="brand"
-              fullWidth
-              onClick={() => {
-                setPaymentOpen(false)
-                goPlace()
-              }}
-            >
-              {price}원 결제하기
-            </Button>
-          </div>
-        )}
-      </BottomSheet>
+        charges={
+          selected
+            ? [{ key: selected.id, label: `대학 깃발 · ${selected.name}`, points: price }]
+            : []
+        }
+        onPaid={() => {
+          setPaymentOpen(false)
+          goPlace()
+        }}
+      />
     </AppShell>
   )
 }

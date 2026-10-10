@@ -1,5 +1,5 @@
-/** Paid locker upgrades the owner buys for their own locker (prototype). */
-export const LOCKER_DECOR_PRICE = 200
+/** Locker upgrades the owner buys for their own locker, in 찰떡. */
+export const LOCKER_DECOR_PRICE = 40
 
 export type LockerBulb = 'globe' | 'edison'
 export type LockerPaint = 'white' | 'black' | 'pink' | 'blue'

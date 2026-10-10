@@ -11,6 +11,7 @@ import {
   universityCharmId,
   universityCharmShapes,
 } from './universities'
+import { formatPoints } from '@/features/points/points'
 import '@/features/supporter/supporterFlow.css'
 import './Classroom.css'
 
@@ -87,7 +88,7 @@ export function LockerCharmPickPage() {
         <section className="university-charm-picker" aria-label="대학 굿즈 부적">
           <div className="university-charm-picker__label">
             <strong>학교</strong>
-            <span>아크릴 키링 · {UNIVERSITY_CHARM_PRICE}원 · 놓을 때 결제해요</span>
+            <span>아크릴 키링 · {formatPoints(UNIVERSITY_CHARM_PRICE)} · 놓을 때 써요</span>
           </div>
           <div className="university-charm-picker__schools" role="list">
             {charmUniversities.map((item) => (

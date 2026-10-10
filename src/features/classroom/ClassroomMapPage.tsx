@@ -16,6 +16,7 @@ import {
   IconButton,
   useFeedback,
 } from '@/design-system'
+import { PointBalanceChip } from '@/features/points/PointWallet'
 import { buildPrototypeShareUrl } from '@/prototype/shareUrl'
 import { getCsatDdayLabel } from '@/features/csat/csatSchedule'
 import { AppShell } from '@/layout/AppShell'
@@ -133,6 +134,7 @@ export function ClassroomMapPage() {
           }
           trailing={
             <div className="classroom-map__app-actions">
+              <PointBalanceChip />
               {wrappedAvailable && (
                 <IconButton
                   label="우리의 수능 기록"

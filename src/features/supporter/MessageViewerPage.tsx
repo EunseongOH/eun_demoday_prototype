@@ -31,6 +31,7 @@ import {
   getSupportMessageAvailability,
 } from './deskStickers'
 import './MessageViewerPage.css'
+import { useStampOnCheerOpen } from '@/features/points/useStampOnCheerOpen'
 
 type ReaderLocationState = {
   from?:
@@ -144,6 +145,8 @@ export function MessageViewerPage() {
     !supporterView &&
     (!classroomView || classroomOwner) &&
     Boolean(availability?.available)
+  // Opening one of today's cheers is the owner's daily attendance stamp.
+  useStampOnCheerOpen(ownerCanRespond && !showCharmFront)
   const publicVisitor =
     (supporterView || (classroomView && !classroomOwner)) &&
     message?.visibility === 'public'

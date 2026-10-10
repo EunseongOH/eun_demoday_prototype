@@ -5,6 +5,7 @@ import { AppShell } from '@/layout/AppShell'
 import { usePrototypeStore } from '@/store/prototypeStore'
 import { DeskObjectVisual } from '@/features/desk/DeskObjectLayer'
 import { buildPrototypeShareUrl } from '@/prototype/shareUrl'
+import { FirstCheerReward } from '@/features/points/FirstCheerReward'
 import { deskObjectLabels } from './supporterFlow'
 import './supporterFlow.css'
 
@@ -55,6 +56,7 @@ export function SupportCompletePage() {
         </Button>
       }
     >
+      <FirstCheerReward />
       <main className="support-complete">
         <div className="support-complete__mark" aria-hidden>
           <Check size={30} strokeWidth={2.4} />

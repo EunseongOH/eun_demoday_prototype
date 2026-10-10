@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react'
 import { BottomSheet, Button } from '@/design-system'
-
-/** How long the prototype "ad" plays before the reward unlocks, in seconds. */
-const AD_SECONDS = 5
+import { AdPlayer } from '@/features/points/AdPlayer'
+import { useAdCountdown } from '@/features/points/useAdCountdown'
 
 export type AdUnlockItem = {
   id: string
@@ -12,7 +10,7 @@ export type AdUnlockItem = {
 
 type AdUnlockSheetProps<T extends AdUnlockItem> = {
   item: T | null
-  /** What is being unlocked, e.g. '편지지' or '클립'. */
+  /** What is being unlocked, e.g. '응원'. */
   kindLabel?: string
   /** 'contain' previews a cut-out (clip, tape); 'cover' a full sheet. */
   previewFit?: 'cover' | 'contain'
@@ -24,35 +22,21 @@ type AdUnlockSheetProps<T extends AdUnlockItem> = {
 
 /**
  * Prototype rewarded-ad flow: a placeholder "ad" counts down, then the
- * stationery unlocks. No real ad network is called.
+ * item opens. No real ad network is called.
  */
 export function AdUnlockSheet<T extends AdUnlockItem>({
-  item: background,
+  item,
   kindLabel = '편지지',
   previewFit = 'cover',
   description,
   onClose,
   onUnlocked,
 }: AdUnlockSheetProps<T>) {
-  const [remaining, setRemaining] = useState(AD_SECONDS)
-  const [playing, setPlaying] = useState(false)
-
-  useEffect(() => {
-    setRemaining(AD_SECONDS)
-    setPlaying(false)
-  }, [background?.id])
-
-  useEffect(() => {
-    if (!playing || remaining <= 0) return
-    const timer = window.setTimeout(() => setRemaining((value) => value - 1), 1000)
-    return () => window.clearTimeout(timer)
-  }, [playing, remaining])
-
-  const finished = playing && remaining <= 0
+  const ad = useAdCountdown(item?.id)
 
   return (
     <BottomSheet
-      open={Boolean(background)}
+      open={Boolean(item)}
       onClose={onClose}
       title={`광고 보고 ${kindLabel} 열기`}
       description={
@@ -60,7 +44,7 @@ export function AdUnlockSheet<T extends AdUnlockItem>({
         `광고 하나를 끝까지 보면 이 ${kindLabel}${hasBatchim(kindLabel) ? '을' : '를'} 계속 쓸 수 있어요.`
       }
     >
-      {background && (
+      {item && (
         <div className="ad-unlock">
           <div
             className={[
@@ -68,51 +52,26 @@ export function AdUnlockSheet<T extends AdUnlockItem>({
               previewFit === 'contain' ? 'ad-unlock__preview--contain' : '',
             ].filter(Boolean).join(' ')}
           >
-            {background.source && (
-              <img src={background.source} alt="" draggable={false} />
+            {item.source && (
+              <img src={item.source} alt="" draggable={false} />
             )}
-            <span className="ad-unlock__name">{background.name}</span>
+            <span className="ad-unlock__name">{item.name}</span>
           </div>
 
-          <div
-            className={[
-              'ad-unlock__player',
-              playing ? 'ad-unlock__player--playing' : '',
-            ].filter(Boolean).join(' ')}
-            aria-live="polite"
-          >
-            <span className="ad-unlock__badge">AD</span>
-            <span className="ad-unlock__copy">
-              {!playing
-                ? '광고 영역 (프로토타입)'
-                : finished
-                  ? '광고가 끝났어요'
-                  : `광고 재생 중… ${remaining}초`}
-            </span>
-            <span
-              className="ad-unlock__progress"
-              style={{
-                width: `${playing ? ((AD_SECONDS - remaining) / AD_SECONDS) * 100 : 0}%`,
-              }}
-            />
-          </div>
+          <AdPlayer playing={ad.playing} remaining={ad.remaining} />
 
-          <p className="ad-unlock__note">
-            프로토타입이라 실제 광고는 나오지 않아요.
-          </p>
-
-          {finished ? (
-            <Button variant="brand" fullWidth onClick={() => onUnlocked(background)}>
+          {ad.finished ? (
+            <Button variant="brand" fullWidth onClick={() => onUnlocked(item)}>
               {kindLabel} 열기
             </Button>
           ) : (
             <Button
               variant="brand"
               fullWidth
-              disabled={playing}
-              onClick={() => setPlaying(true)}
+              disabled={ad.playing}
+              onClick={ad.start}
             >
-              {playing ? '광고 보는 중…' : '광고 보기'}
+              {ad.playing ? '광고 보는 중…' : '광고 보기'}
             </Button>
           )}
         </div>

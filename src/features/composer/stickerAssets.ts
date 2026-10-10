@@ -6,8 +6,8 @@ export type StickerAsset = {
   tags?: string[]
   /** Which row of the sticker tool it sits in; also decides where it lands. */
   group?: 'sticker' | 'clip' | 'tape'
-  /** Opens after watching one rewarded ad (prototype). */
-  adLocked?: boolean
+  /** Bought once with 찰떡, then free to use. */
+  paid?: boolean
 }
 
 const STICKER_ASSET_PATH = '/assets/stickers'
@@ -49,23 +49,23 @@ const clip = (
   id: string,
   name: string,
   baseWidthPercent: number,
-  adLocked = false,
+  paid = false,
 ): StickerAsset => ({
   id: `clip-${id}`,
   name,
   source: `${LETTER_DECOR_PATH}/clip-${id}.webp`,
   baseWidthPercent,
   group: 'clip',
-  adLocked,
+  paid,
 })
 
-const tape = (id: string, name: string, adLocked = false): StickerAsset => ({
+const tape = (id: string, name: string, paid = false): StickerAsset => ({
   id: `tape-${id}`,
   name,
   source: `${LETTER_DECOR_PATH}/tape-${id}.webp`,
   baseWidthPercent: 34,
   group: 'tape',
-  adLocked,
+  paid,
 })
 
 /** Clips that hold the letter from its top edge. */

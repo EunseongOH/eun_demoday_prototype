@@ -168,6 +168,14 @@
   gap: 12px;
 }
 
+.home-page__topline {
+  justify-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .home-page__header h1 {
   margin: 0;
   font-size: 28px;

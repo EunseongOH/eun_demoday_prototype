@@ -25,7 +25,13 @@ import {
   type ComposerBackground,
 } from './backgroundAssets'
 import type { ComposerTool } from './ComposerDock'
-import { AdUnlockSheet } from './AdUnlockSheet'
+import {
+  LETTER_DECOR_PRICE,
+  STATIONERY_PRICE,
+  formatPoints,
+} from '@/features/points/points'
+import { PointIcon } from '@/features/points/PointIcon'
+import { PointPaySheet } from '@/features/points/PointPaySheet'
 import { usePrototypeStore } from '@/store/prototypeStore'
 import {
   composerStickers,
@@ -116,14 +122,14 @@ export function ComposerToolTray({
   const stationeryBackgrounds = composerBackgrounds.filter(
     (background) => background.group === 'stationery',
   )
-  // Stationery templates stay locked until the supporter watches an ad.
+  // Stationery templates stay locked until bought with 찰떡, then stay open.
   const unlockedStationeryIds = usePrototypeStore(
     (state) => state.unlockedStationeryIds,
   )
   const unlockStationery = usePrototypeStore(
     (state) => state.unlockStationery,
   )
-  const [adBackground, setAdBackground] =
+  const [paidBackground, setPaidBackground] =
     useState<ComposerBackground | null>(null)
   const lockedStationeryIds = new Set(
     stationeryBackgrounds
@@ -149,19 +155,37 @@ export function ComposerToolTray({
             lockedIds={lockedStationeryIds}
             onSelect={onBackgroundChange}
             onLockedSelect={(id) =>
-              setAdBackground(
+              setPaidBackground(
                 stationeryBackgrounds.find((background) => background.id === id) ??
                   null,
               )
             }
           />
-          <AdUnlockSheet
-            item={adBackground}
-            onClose={() => setAdBackground(null)}
-            onUnlocked={(background) => {
-              unlockStationery(background.id)
-              onBackgroundChange(background.id)
-              setAdBackground(null)
+          <PointPaySheet
+            open={Boolean(paidBackground)}
+            title="이 편지지를 살까요?"
+            description="한 번 사면 다음 응원에도 계속 쓸 수 있어요."
+            preview={
+              paidBackground && (
+                <div className="point-pay__item">
+                  {paidBackground.source && (
+                    <img src={paidBackground.source} alt="" draggable={false} />
+                  )}
+                  {paidBackground.name}
+                </div>
+              )
+            }
+            charges={
+              paidBackground
+                ? [{ key: paidBackground.id, label: `편지지 · ${paidBackground.name}`, points: STATIONERY_PRICE }]
+                : []
+            }
+            onClose={() => setPaidBackground(null)}
+            onPaid={() => {
+              if (!paidBackground) return
+              unlockStationery(paidBackground.id)
+              onBackgroundChange(paidBackground.id)
+              setPaidBackground(null)
             }}
           />
           <BackgroundRow
@@ -466,12 +490,12 @@ function StickerTool({
   onBringForward: () => void
   onDelete: () => void
 }) {
-  // Prettier clips and tapes stay locked until the supporter watches an ad.
+  // Prettier clips and tapes stay locked until bought with 찰떡.
   const unlockedDecorIds = usePrototypeStore(
     (state) => state.unlockedDecorIds,
   )
   const unlockDecor = usePrototypeStore((state) => state.unlockDecor)
-  const [adAsset, setAdAsset] = useState<StickerAsset | null>(null)
+  const [paidAsset, setPaidAsset] = useState<StickerAsset | null>(null)
 
   const renderRow = (label: string, assets: StickerAsset[], kind?: string) => (
     <div className="composer-sticker-section">
@@ -486,7 +510,7 @@ function StickerTool({
       >
         {assets.map((asset) => {
           const locked =
-            asset.adLocked && !unlockedDecorIds.includes(asset.id)
+            asset.paid && !unlockedDecorIds.includes(asset.id)
 
           return (
             <div
@@ -497,7 +521,7 @@ function StickerTool({
               ].filter(Boolean).join(' ')}
             >
               <AssetTile
-                name={locked ? `${asset.name} (광고 보고 열기)` : asset.name}
+                name={locked ? `${asset.name} (${formatPoints(LETTER_DECOR_PRICE)})` : asset.name}
                 className="composer-sticker-asset"
                 thumbnail={
                   <img
@@ -507,12 +531,13 @@ function StickerTool({
                   />
                 }
                 onClick={() =>
-                  locked ? setAdAsset(asset) : onAdd(asset.id)
+                  locked ? setPaidAsset(asset) : onAdd(asset.id)
                 }
               />
               {locked && (
                 <span className="composer-bg-item__lock" aria-hidden>
-                  AD
+                  <PointIcon size={11} />
+                  {LETTER_DECOR_PRICE}
                 </span>
               )}
             </div>
@@ -530,15 +555,33 @@ function StickerTool({
       {renderRow('마스킹 테이프', letterTapes, 'tape')}
       {renderRow('스티커', composerStickers)}
 
-      <AdUnlockSheet
-        item={adAsset}
-        kindLabel={adAsset?.group === 'tape' ? '테이프' : '클립'}
-        previewFit="contain"
-        onClose={() => setAdAsset(null)}
-        onUnlocked={(asset) => {
-          unlockDecor(asset.id)
-          onAdd(asset.id)
-          setAdAsset(null)
+      <PointPaySheet
+        open={Boolean(paidAsset)}
+        title={`이 ${paidAsset?.group === 'tape' ? '테이프를' : '클립을'} 살까요?`}
+        description="한 번 사면 다음 응원에도 계속 쓸 수 있어요."
+        preview={
+          paidAsset && (
+            <div className="point-pay__item point-pay__item--contain">
+              <img src={paidAsset.source} alt="" draggable={false} />
+              {paidAsset.name}
+            </div>
+          )
+        }
+        charges={
+          paidAsset
+            ? [{
+                key: paidAsset.id,
+                label: `${paidAsset.group === 'tape' ? '마스킹 테이프' : '클립'} · ${paidAsset.name}`,
+                points: LETTER_DECOR_PRICE,
+              }]
+            : []
+        }
+        onClose={() => setPaidAsset(null)}
+        onPaid={() => {
+          if (!paidAsset) return
+          unlockDecor(paidAsset.id)
+          onAdd(paidAsset.id)
+          setPaidAsset(null)
         }}
       />
 
@@ -898,7 +941,7 @@ function BackgroundRow({
             ].filter(Boolean).join(' ')}
             aria-label={
               lockedIds?.has(background.id)
-                ? `${background.name} (광고 보고 열기)`
+                ? `${background.name} (${formatPoints(STATIONERY_PRICE)})`
                 : background.name
             }
             onClick={() =>
@@ -943,7 +986,8 @@ function BackgroundRow({
             )}
             {lockedIds?.has(background.id) && (
               <span className="composer-bg-item__lock" aria-hidden>
-                AD
+                <PointIcon size={11} />
+                {STATIONERY_PRICE}
               </span>
             )}
             <span>{background.name}</span>

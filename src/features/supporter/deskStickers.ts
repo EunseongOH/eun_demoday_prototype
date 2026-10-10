@@ -11,7 +11,7 @@ export type DeskSticker = {
   source: string
   /** Box the sticker needs; garlands and pennants are wide. */
   shape?: 'square' | 'bow' | 'garland' | 'pennant'
-  /** Prototype price in won; free when absent. */
+  /** Price in 찰떡; free when absent. */
   price?: number
 }
 
