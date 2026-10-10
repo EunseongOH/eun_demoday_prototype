@@ -22,6 +22,7 @@ import {
 import type {
   AuthProvider,
   AuthSession,
+  LastLogin,
   BlackboardEntry,
   CharmMaterial,
   DeskGem,
@@ -47,6 +48,8 @@ type PrototypeState = {
   debugMode: boolean
   currentUser: PrototypeUser
   authSession: AuthSession
+  /** Survives sign-out so the welcome screen can offer the same way back in. */
+  lastLogin: LastLogin | null
   currentDesk: Desk
   messages: Message[]
   composerDraft: MessageDraft
@@ -65,10 +68,10 @@ type PrototypeState = {
   publicBlockedSupporters: string[]
   reportedMessageIds: string[]
   readMessageIds: string[]
-  /** Stationery templates unlocked by watching an ad (prototype). */
+  /** Stationery templates bought with 찰떡. */
   unlockedStationeryIds: string[]
   unlockStationery: (backgroundId: string) => void
-  /** Clips and washi tapes unlocked by watching an ad (prototype). */
+  /** Clips and washi tapes bought with 찰떡. */
   unlockedDecorIds: string[]
   unlockDecor: (assetId: string) => void
   /** Messages the desk owner tidied off the desk into the basket. */
@@ -162,6 +165,7 @@ export const usePrototypeStore = create<PrototypeState>()(
       debugMode: false,
       currentUser: mockCurrentUser,
       authSession: { status: 'anonymous' },
+      lastLogin: null,
       currentDesk: mockDesk,
       messages: [],
       composerDraft: emptyComposerDraft,
@@ -329,14 +333,13 @@ export const usePrototypeStore = create<PrototypeState>()(
           }
         }),
       setDebugMode: (debugMode) => set({ debugMode }),
-      signIn: (email, provider = 'password') =>
+      signIn: (email, provider = 'password') => {
+        const login = { email: email.trim() || 'jisu@example.com', provider }
         set({
-          authSession: {
-            status: 'authenticated',
-            email: email.trim() || 'jisu@example.com',
-            provider,
-          },
-        }),
+          authSession: { status: 'authenticated', ...login },
+          lastLogin: login,
+        })
+      },
       signUp: (displayName, email) =>
         set((state) => ({
           currentUser: {
@@ -345,6 +348,10 @@ export const usePrototypeStore = create<PrototypeState>()(
           },
           authSession: {
             status: 'authenticated',
+            email: email.trim() || 'jisu@example.com',
+            provider: 'password',
+          },
+          lastLogin: {
             email: email.trim() || 'jisu@example.com',
             provider: 'password',
           },
@@ -357,6 +364,7 @@ export const usePrototypeStore = create<PrototypeState>()(
         set({
           currentUser: mockCurrentUser,
           authSession: { status: 'anonymous' },
+          lastLogin: null,
         }),
       setDeskReadMode: (readMode) =>
         set((state) => ({
@@ -888,6 +896,7 @@ export const usePrototypeStore = create<PrototypeState>()(
         debugMode: state.debugMode,
         currentUser: state.currentUser,
         authSession: state.authSession,
+        lastLogin: state.lastLogin,
         currentDesk: state.currentDesk,
         messages: state.messages,
         composerDraft: state.composerDraft,

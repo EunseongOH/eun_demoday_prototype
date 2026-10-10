@@ -28,6 +28,7 @@ import { SentMessagesPage } from '@/features/supporter/SentMessagesPage'
 import { SupporterSettingsPage } from '@/features/supporter/SupporterSettingsPage'
 import { StartPage } from '@/features/start/StartPage'
 import { HomePage } from '@/features/start/HomePage'
+import { WelcomePage } from '@/features/start/WelcomePage'
 import {
   AccountPage,
   DeleteAccountCompletePage,
@@ -92,7 +93,7 @@ export const router = createBrowserRouter([
   {
     element: <App />,
     children: [
-      { index: true, element: <Navigate to="/start" replace /> },
+      { index: true, element: <WelcomePage /> },
       { path: '/start', element: <StartPage /> },
       { path: '/home', element: <HomePage /> },
       { path: '/auth/login', element: <LoginPage /> },
